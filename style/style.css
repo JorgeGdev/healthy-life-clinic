@@ -1,0 +1,429 @@
+/* ==============================================
+   Improved CSS for Landing Page - Astro Style
+   ============================================== */
+
+/* Reset & Box-Sizing */
+html, body {
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Variables CSS para personalización */
+:root {
+  --primary-font: 'trebuchet ms', Arial, sans-serif;
+  --heading-font: 'century gothic', Arial, sans-serif;
+  --body-bg: #F0EFE2;
+  --body-text: #000;
+  --header-bg: transparent;
+  --footer-text: #FFF;
+  --menubar-bg: #000;
+  --link-color: #000;
+  --link-hover-bg: rgba(255,255,255,0.1);
+  --blockquote-border: #E5E5DB;
+  --blockquote-bg: #FFF;
+  --sidebar-selected: #7E2451;
+  --table-header-bg: #3B3B3B;
+  --table-header-text: #FFF;
+  --table-cell-bg: #F0EFE2;
+  --table-cell-text: #47433F;
+  --gradient-start: #4CAF50;
+  --gradient-end: #2E7D32;
+  --input-focus-color: #51CBEA;
+}
+
+/* Body Styling */
+body {
+  font: normal 0.80em var(--primary-font);
+  background: var(--body-bg) url(background.png) repeat;
+  color: var(--body-text);
+  line-height: 1.6;
+}
+
+/* Tipografía */
+p {
+  padding-bottom: 20px;
+  line-height: 1.7em;
+}
+
+img {
+  border: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font: normal 175% var(--heading-font);
+  color: var(--body-text);
+  margin-bottom: 15px;
+  padding: 15px 0 5px 0;
+}
+
+h4, h5, h6 {
+  margin: 0;
+  padding-bottom: 5px;
+  font: normal 120% Arial, sans-serif;
+}
+
+h5, h6 {
+  font: italic 95% Arial, sans-serif;
+  padding-bottom: 15px;
+}
+
+/* Enlaces */
+a, a:visited {
+  outline: none;
+  text-decoration: underline;
+  color: var(--link-color);
+  transition: color 0.3s ease, background 0.3s ease;
+}
+
+a:hover {
+  text-decoration: none;
+  background: var(--link-hover-bg);
+}
+
+/* Clases Utilitarias */
+.left {
+  float: left;
+  margin-right: 10px;
+}
+
+.right {
+  float: right;
+  margin-left: 10px;
+}
+
+.center {
+  display: block;
+  text-align: center;
+  margin: 20px auto;
+}
+
+/* Blockquote */
+blockquote {
+  margin: 20px 0;
+  padding: 10px 20px 0 20px;
+  border: 1px solid var(--blockquote-border);
+  background: var(--blockquote-bg);
+}
+
+/* Listas */
+ul {
+  margin: 2px 0 22px 17px;
+}
+
+ul li {
+  list-style-type: circle;
+  margin-bottom: 6px;
+  padding: 0 0 4px 5px;
+}
+
+ol {
+  margin: 8px 0 22px 20px;
+}
+
+ol li {
+  margin-bottom: 11px;
+}
+
+/* Contenedores Generales */
+#main,
+#logo,
+#menubar,
+#site_content,
+#footer {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Header & Logo */
+#header {
+  background: var(--header-bg);
+  height: 202px;
+}
+
+#logo {
+  width: 898px;
+  position: relative;
+  height: 148px;
+  border-bottom: 2px solid #FFF;
+}
+
+#logo #logo_text {
+  position: absolute;
+  top: 20px;
+  left: 0;
+}
+
+#logo h1, 
+#logo h2 {
+  font: normal 300% var(--heading-font);
+  border-bottom: 0;
+  text-transform: none;
+  margin: 0;
+}
+
+#logo_text h1,
+#logo_text h1 a,
+#logo_text h1 a:hover {
+  padding-top: 22px;
+  color: #FFF;
+  letter-spacing: -1px;
+  text-decoration: none;
+}
+
+#logo_text h1 a .logo_colour {
+  color: #FFF;
+}
+
+#logo_text h2 {
+  font-size: 100%;
+  padding-top: 4px;
+  color: #FFF;
+}
+
+/* Menú de Navegación (Navbar) */
+#menubar {
+  width: 898px;
+  height: 52px;
+  background: var(--menubar-bg);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+ul#menu,
+ul#menu li {
+  float: left;
+  margin: 0;
+  padding: 0;
+}
+
+ul#menu li {
+  list-style: none;
+}
+
+ul#menu li a {
+  letter-spacing: 0.1em;
+  font: normal 100% Arial, sans-serif;
+  display: block;
+  float: left;
+  height: 17px;
+  margin: 10px 0 0 10px;
+  padding: 9px 26px 6px 26px;
+  text-align: center;
+  color: #FFF;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: transparent;
+  transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+ul#menu li a:hover,
+ul#menu li.selected a,
+ul#menu li.selected a:hover {
+  color: #FFF;
+  background: var(--link-hover-bg);
+  transform: scale(1.05);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+/* Contenido Principal */
+#site_content {
+  width: 854px;
+  overflow: hidden;
+  margin: 0 auto;
+  padding: 0 24px 20px 20px;
+  background: #FFF;
+}
+
+/* Sidebar */
+.sidebar {
+  float: right;
+  width: 210px;
+  padding: 0 15px 20px 15px;
+}
+
+.sidebar ul {
+  width: 198px;
+  padding-top: 4px;
+  margin: 4px 0 30px 0;
+}
+
+.sidebar li {
+  list-style: none;
+  padding-bottom: 7px;
+}
+
+.sidebar li a,
+.sidebar li a:hover {
+  padding-left: 40px;
+  display: block;
+  background: transparent url(link.png) no-repeat left center;
+}
+
+.sidebar li a.selected {
+  color: var(--sidebar-selected);
+  text-decoration: none;
+}
+
+/* Contenido */
+#content {
+  text-align: left;
+  float: left;
+  width: 595px;
+  padding: 0;
+}
+
+#content ul {
+  margin: 2px 0 22px 0;
+}
+
+#content ul li {
+  list-style-type: none;
+  background: url(bullet.png) no-repeat;
+  margin-bottom: 6px;
+  padding: 0 0 4px 25px;
+  line-height: 1.5em;
+}
+
+/* Footer Mejorado */
+#footer {
+  width: 898px;
+  font: normal 100% 'lucida sans unicode', Arial, sans-serif;
+  height: 33px;
+  padding: 24px 0 5px 0;
+  text-align: center;
+  background: var(--header-bg);
+  color: var(--footer-text);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-top: 1px solid #ccc;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+  margin-top: 20px;
+}
+
+#footer a {
+  color: var(--footer-text);
+  text-decoration: none;
+}
+
+#footer a:hover {
+  text-decoration: underline;
+}
+
+/* Caja de Búsqueda */
+.search {
+  color: #5D5D5D;
+  border: 1px solid #BBB;
+  width: 134px;
+  padding: 4px;
+  font: 100% Arial, sans-serif;
+  border-radius: 4px;
+  transition: box-shadow 0.3s ease;
+}
+
+.search:focus {
+  outline: none;
+  box-shadow: 0 0 5px var(--input-focus-color);
+  border-color: var(--input-focus-color);
+}
+
+/* Sección de Colores */
+#colours {
+  height: 0;
+  text-align: right;
+  padding: 66px 16px 0 300px;
+}
+
+/* Formularios */
+.form_settings {
+  margin-top: 15px;
+}
+
+.form_settings p {
+  padding-bottom: 4px;
+}
+
+.form_settings span {
+  float: left;
+  width: 200px;
+  text-align: left;
+}
+
+.form_settings input,
+.form_settings textarea,
+.form_settings select {
+  padding: 5px;
+  width: 299px;
+  font: 100% Arial, sans-serif;
+  border: 1px solid #E5E5DB;
+  background: #FFF;
+  color: #47433F;
+  border-radius: 4px;
+  transition: box-shadow 0.3s ease, border 0.3s ease;
+}
+
+.form_settings input:focus,
+.form_settings textarea:focus,
+.form_settings select:focus {
+  outline: none;
+  box-shadow: 0 0 5px var(--input-focus-color);
+  border-color: var(--input-focus-color);
+}
+
+/* Botón de Envío con Gradiente y Efecto Scale */
+.form_settings .submit {
+  font: 100% Arial, sans-serif;
+  border: none;
+  width: 99px;
+  margin-left: 212px;
+  height: 33px;
+  padding: 2px 0 3px 0;
+  cursor: pointer;
+  background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+  color: #FFF;
+  transition: transform 0.3s ease, background 0.3s ease;
+  border-radius: 4px;
+}
+
+.form_settings .submit:hover {
+  transform: scale(1.05);
+  background: linear-gradient(45deg, var(--gradient-end), var(--gradient-start));
+}
+
+/* Separador */
+.separator {
+  width: 100%;
+  height: 0;
+  border-top: 1px solid #D9D5CF;
+  border-bottom: 1px solid #FFF;
+  margin-bottom: 20px;
+}
+
+/* Tablas con Diseño Más Limpio */
+table {
+  width: 100%;
+  margin: 10px 0 30px 0;
+  border-collapse: collapse;
+}
+
+table tr th,
+table tr td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+table tr th {
+  background: var(--table-header-bg);
+  color: var(--table-header-text);
+}
+
+table tr td {
+  background: var(--table-cell-bg);
+  color: var(--table-cell-text);
+}

@@ -1,0 +1,6 @@
+# .gitignore
+*.log
+*.sql
+*.zip
+.vscode/
+node_modules/
