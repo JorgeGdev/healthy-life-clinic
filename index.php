@@ -1,13 +1,13 @@
 <?php
 // Start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 
 // Redirect to login if the user is not logged in or not a patient
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'patient') {
-    header('Location: login.php');
-    exit();
+  header('Location: login.php');
+  exit();
 }
 
 // Include database connection
@@ -26,6 +26,7 @@ $stmt->close();
 
 <!DOCTYPE HTML>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,6 +35,8 @@ $stmt->close();
   <meta name="author" content="Healthy Life Clinic">
   <title>Healthy Life Clinic - Your Healthcare Partner</title>
   <link rel="stylesheet" type="text/css" href="style/style.css" title="style" />
+  <link rel="stylesheet" type="text/css" href="style/responsive.css" media="screen and (max-width: 768px)">
+
 </head>
 
 <body>
@@ -46,6 +49,7 @@ $stmt->close();
         </div>
       </div>
       <div id="menubar">
+        <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
         <ul id="menu">
           <li class="selected"><a href="index.php">Home</a></li>
           <li><a href="list_appointments.php">Appointments</a></li>
@@ -55,6 +59,7 @@ $stmt->close();
         </ul>
       </div>
     </div>
+
 
     <div id="site_content">
       <div class="sidebar">
@@ -95,7 +100,15 @@ $stmt->close();
       <a href="http://www.html5webtemplates.co.uk">Free CSS Templates</a>
     </div>
   </div>
+  
+  <script>
+  function toggleMenu() {
+    const menu = document.getElementById('menu');
+    menu.classList.toggle('active');
+  }
+</script>
 </body>
+
 </html>
 
 <?php mysqli_close($conn); ?>

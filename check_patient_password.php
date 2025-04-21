@@ -1,0 +1,104 @@
+<?php
+require 'config.php';
+
+$error = '';
+$success = '';
+$submitted = false;
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $submitted = true;
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+
+    $query = "SELECT password FROM patients WHERE email = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows === 1) {
+        $row = $result->fetch_assoc();
+        $hash = $row['password'];
+
+        if (password_verify($password, $hash)) {
+            $success = "✅ Password is VALID for $email";
+        } else {
+            $error = "❌ Password is INVALID for $email";
+        }
+    } else {
+        $error = "❌ No patient found with that email.";
+    }
+
+    $stmt->close();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Check Patient Password</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style/style.css" title="style" />
+</head>
+<body>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <h1><a href="index.php">Healthy<span class="logo_colour"> Life Clinic</span></a></h1>
+          <h2>Patient Password Checker</h2>
+        </div>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <li><a href="home.php">Home</a></li>
+          <li><a href="login.php">Login</a></li>
+          <li><a href="privacy.php">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="site_content">
+      <div class="sidebar">
+        <h3>Test Info</h3>
+        <p>This tool checks hashed patient passwords.</p>
+        <h3>Example Patients</h3>
+        <ul>
+          <li>s.stallone@example.com</li>
+          <li>b.willis@example.com</li>
+          <li>a.schwarzenegger@example.com</li>
+        </ul>
+      </div>
+
+      <div id="content">
+        <h1>Check Patient Password</h1>
+
+        <?php if ($error): ?>
+          <p style="color: red;"><?php echo htmlspecialchars($error); ?></p>
+        <?php elseif ($success): ?>
+          <p style="color: green;"><?php echo htmlspecialchars($success); ?></p>
+        <?php elseif ($submitted): ?>
+          <p>No result found.</p>
+        <?php endif; ?>
+
+        <form method="POST" class="form_settings">
+          <p><span>Email:</span><input type="email" name="email" required></p>
+          <p><span>Password:</span><input type="password" name="password" required></p>
+          <p style="padding-top: 15px"><input class="submit" type="submit" value="Check Password"></p>
+        </form>
+      </div>
+    </div>
+
+    <div id="footer">
+      Copyright &copy; Healthy Life Clinic |
+      <a href="http://validator.w3.org/check?uri=referer">HTML5</a> |
+      <a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a> |
+      <a href="http://www.html5webtemplates.co.uk">Free CSS Templates</a>
+    </div>
+  </div>
+</body>
+</html>
+
+<?php mysqli_close($conn); ?>

@@ -1,0 +1,95 @@
+/* responsive.css */
+
+/* General reset for mobile */
+body, #main, #header, #logo, #menubar, #site_content, #footer {
+  width: 100% !important;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+/* Stack logo text */
+#logo_text {
+  text-align: center;
+  position: static;
+  padding-top: 20px;
+}
+
+/* Stack sidebar below content */
+#site_content {
+  display: flex;
+  flex-direction: column;
+}
+
+#content, .sidebar {
+  float: none !important;
+  width: 100% !important;
+}
+
+/* Table adjustments */
+table {
+  font-size: 14px;
+  overflow-x: auto;
+  display: block;
+}
+
+/* Buttons full width */
+input.submit, button {
+  width: 100% !important;
+  max-width: 300px;
+  margin: 10px auto;
+}
+
+/* Hamburger icon (hidden on desktop, shown in mobile) */
+.menu-toggle {
+  display: none;
+  font-size: 26px;
+  color: white;
+  background-color: #000;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-align: right;
+}
+
+/* Responsive Menu Behavior */
+@media screen and (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  #menu {
+    display: none;
+    flex-direction: column;
+    background-color: #000;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  #menu.active {
+    display: flex;
+    margin-bottom: 30px;
+    height: 200px;
+    gap: 10px;
+  }
+
+  #menu li {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 10px 0;
+    list-style: none;
+  }
+
+  #menu li a {
+    display: block;
+    width: 100%;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+  }
+
+  #menu li a:hover {
+    background-color: rgba(255,255,255,0.1);
+  }
+}

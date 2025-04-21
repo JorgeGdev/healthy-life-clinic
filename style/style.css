@@ -1,6 +1,3 @@
-/* ==============================================
-   Improved CSS for Landing Page - Astro Style
-   ============================================== */
 
 /* Reset & Box-Sizing */
 html, body {
@@ -190,9 +187,10 @@ ol li {
 /* Menú de Navegación (Navbar) */
 #menubar {
   width: 898px;
-  height: 52px;
+  height: 60px;
   background: var(--menubar-bg);
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  border-radius: 0 0 15px 15px;
 }
 
 ul#menu,
@@ -238,6 +236,9 @@ ul#menu li.selected a:hover {
   margin: 0 auto;
   padding: 0 24px 20px 20px;
   background: #FFF;
+  margin-top: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  border-radius: 15px;
 }
 
 /* Sidebar */
