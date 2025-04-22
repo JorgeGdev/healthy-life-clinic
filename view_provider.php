@@ -3,12 +3,12 @@ require 'config.php';
 require 'checksession.php';
 
 if (!isAdmin()) {
-    header('Location: login.php');
-    exit();
+  header('Location: login.php');
+  exit();
 }
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    die("Invalid provider ID.");
+  die("Invalid provider ID.");
 }
 
 $provider_id = intval($_GET['id']);
@@ -20,7 +20,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    die("Provider not found.");
+  die("Provider not found.");
 }
 
 $provider = $result->fetch_assoc();
@@ -29,12 +29,15 @@ $stmt->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>View Provider - Healthy Life Clinic</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style/style.css" />
+  <link rel="stylesheet" type="text/css" href="style/responsive.css" media="screen and (max-width: 768px)">
 </head>
+
 <body>
   <div id="main">
     <div id="header">
@@ -45,10 +48,11 @@ $stmt->close();
         </div>
       </div>
       <div id="menubar">
+        <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
         <ul id="menu">
-          <li><a href="admin_dashboard.php">Dashboard</a></li>
-          <li><a href="manage_patients.php">Patients</a></li>
-          <li class="selected"><a href="manage_providers.php">Providers</a></li>
+          <li class="selected"><a href="admin_dashboard.php">Dashboard</a></li>
+          <li><a href="manage_patients.php">Manage Patients</a></li>
+          <li><a href="manage_providers.php">Manage Providers</a></li>
           <li><a href="list_appointments.php">Appointments</a></li>
           <li><a href="logout.php">Logout</a></li>
         </ul>
@@ -73,7 +77,10 @@ $stmt->close();
         <p><strong>Specialization:</strong> <?php echo htmlspecialchars($provider['specialization']); ?></p>
 
         <form action="manage_providers.php" method="get">
-          <p style="padding-top: 15px"><input class="submit" type="submit" value="Back to Providers"></p>
+          <p class="form-submit">
+            <button type="submit" class="submit">back to Providers</button>
+          </p>
+
         </form>
       </div>
     </div>
@@ -83,7 +90,9 @@ $stmt->close();
       <a href="privacy.php">Privacy</a>
     </div>
   </div>
+  <script src="style/script.js"></script>
 </body>
+
 </html>
 
 <?php $conn->close(); ?>

@@ -8,51 +8,54 @@ $providers_sql = "SELECT provider_id, first_name, last_name, specialization FROM
 $providers_result = $conn->query($providers_sql);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (!isset($_POST['patient_id']) || !is_numeric($_POST['patient_id'])) {
-        die("Invalid patient ID.");
-    }
-    if (!isset($_POST['provider_id']) || !is_numeric($_POST['provider_id'])) {
-        die("Invalid provider ID.");
-    }
-    if (!isset($_POST['appointment_date']) || strtotime($_POST['appointment_date']) === false) {
-        die("Invalid appointment date.");
-    }
-    if (!isset($_POST['appointment_time']) || empty($_POST['appointment_time'])) {
-        die("Appointment time is required.");
-    }
-    if (!isset($_POST['reason']) || strlen(trim($_POST['reason'])) < 10) {
-        die("Please enter a valid reason (min 10 characters).");
-    }
+  if (!isset($_POST['patient_id']) || !is_numeric($_POST['patient_id'])) {
+    die("Invalid patient ID.");
+  }
+  if (!isset($_POST['provider_id']) || !is_numeric($_POST['provider_id'])) {
+    die("Invalid provider ID.");
+  }
+  if (!isset($_POST['appointment_date']) || strtotime($_POST['appointment_date']) === false) {
+    die("Invalid appointment date.");
+  }
+  if (!isset($_POST['appointment_time']) || empty($_POST['appointment_time'])) {
+    die("Appointment time is required.");
+  }
+  if (!isset($_POST['reason']) || strlen(trim($_POST['reason'])) < 10) {
+    die("Please enter a valid reason (min 10 characters).");
+  }
 
-    $patient_id = (int) $_POST['patient_id'];
-    $provider_id = (int) $_POST['provider_id'];
-    $appointment_date = $_POST['appointment_date'];
-    $appointment_time = $_POST['appointment_time'];
-    $reason = htmlspecialchars(trim($_POST['reason']));
+  $patient_id = (int) $_POST['patient_id'];
+  $provider_id = (int) $_POST['provider_id'];
+  $appointment_date = $_POST['appointment_date'];
+  $appointment_time = $_POST['appointment_time'];
+  $reason = htmlspecialchars(trim($_POST['reason']));
 
-    $insert_sql = "INSERT INTO appointments (patient_id, provider_id, appointment_date, appointment_time, reason, status) VALUES (?, ?, ?, ?, ?, 'Pending')";
-    $stmt = $conn->prepare($insert_sql);
-    $stmt->bind_param("iisss", $patient_id, $provider_id, $appointment_date, $appointment_time, $reason);
+  $insert_sql = "INSERT INTO appointments (patient_id, provider_id, appointment_date, appointment_time, reason, status) VALUES (?, ?, ?, ?, ?, 'Pending')";
+  $stmt = $conn->prepare($insert_sql);
+  $stmt->bind_param("iisss", $patient_id, $provider_id, $appointment_date, $appointment_time, $reason);
 
-    if ($stmt->execute()) {
-        echo "<script>alert('Appointment booked successfully!'); window.location.href = 'list_appointments.php';</script>";
-    } else {
-        echo "Error booking appointment: " . $conn->error;
-    }
+  if ($stmt->execute()) {
+    echo "<script>alert('Appointment booked successfully!'); window.location.href = 'list_appointments.php';</script>";
+  } else {
+    echo "Error booking appointment: " . $conn->error;
+  }
 
-    $stmt->close();
+  $stmt->close();
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Book Appointment - Healthy Life Clinic</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style/style.css" title="style" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" type="text/css" href="style/responsive.css" media="screen and (max-width: 768px)">
 </head>
+
 <body>
   <div id="main">
     <div id="header">
@@ -63,11 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
       </div>
       <div id="menubar">
+        <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
         <ul id="menu">
-          <li><a href="index.php">Home</a></li>
-          <li><a href="list_appointments.php">Appointments</a></li>
-          <li class="selected"><a href="make_appointment.php">Book</a></li>
-          <li><a href="privacy.php">Privacy Policy</a></li>
+          <li><a href="home.php">Home</a></li>
+          <li class="selected"><a href="list_appointments.php">Appointments</a></li>
+          <li><a href="make_appointment.php">Book</a></li>
+          <li><a href="privacy.php">Privacy</a></li>
           <li><a href="logout.php">Logout</a></li>
         </ul>
       </div>
@@ -123,7 +127,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <textarea name="reason" rows="4" required minlength="10" maxlength="500"></textarea>
           </p>
 
-          <p style="padding-top: 15px"><input class="submit" type="submit" value="Book Now"></p>
+          <p class="form-submit">
+            <button type="submit" class="submit">Book Now</button>
+          </p>
+
         </form>
       </div>
     </div>
@@ -138,16 +145,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="style/script.js"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
       flatpickr("#appointment_date", {
         dateFormat: "Y-m-d",
         minDate: "today"
       });
     });
 
-    $(document).ready(function () {
-      $("#provider, #appointment_date").change(function () {
+    $(document).ready(function() {
+      $("#provider, #appointment_date").change(function() {
         var provider_id = $("#provider").val();
         var appointment_date = $("#appointment_date").val();
 
@@ -160,9 +168,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               appointment_date: appointment_date
             },
             dataType: "json",
-            success: function (data) {
+            success: function(data) {
               $("#appointment_time").html('<option value="" disabled selected>Select a time</option>');
-              data.forEach(function (time) {
+              data.forEach(function(time) {
                 $("#appointment_time").append('<option value="' + time + '">' + time + '</option>');
               });
             }
@@ -172,6 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     });
   </script>
 </body>
+
 </html>
 
 <?php $conn->close(); ?>

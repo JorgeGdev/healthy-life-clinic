@@ -50,6 +50,7 @@ $result_appointments = mysqli_query($conn, $query_appointments);
   <title>Admin Dashboard - Healthy Life Clinic</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style/style.css" title="style" />
+  <link rel="stylesheet" type="text/css" href="style/responsive.css" media="screen and (max-width: 768px)">
 </head>
 <body>
   <div id="main">
@@ -61,6 +62,7 @@ $result_appointments = mysqli_query($conn, $query_appointments);
         </div>
       </div>
       <div id="menubar">
+        <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
         <ul id="menu">
           <li class="selected"><a href="admin_dashboard.php">Dashboard</a></li>
           <li><a href="manage_patients.php">Manage Patients</a></li>
@@ -141,6 +143,7 @@ $result_appointments = mysqli_query($conn, $query_appointments);
       <a href="http://www.html5webtemplates.co.uk">Free CSS Templates</a>
     </div>
   </div>
+  <script src="style/script.js"></script>
 </body>
 </html>
 

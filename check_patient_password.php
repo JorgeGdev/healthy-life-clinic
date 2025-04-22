@@ -7,41 +7,44 @@ $submitted = false;
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $submitted = true;
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
+  $submitted = true;
+  $email = trim($_POST['email']);
+  $password = trim($_POST['password']);
 
-    $query = "SELECT password FROM patients WHERE email = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
+  $query = "SELECT password FROM patients WHERE email = ?";
+  $stmt = $conn->prepare($query);
+  $stmt->bind_param("s", $email);
+  $stmt->execute();
+  $result = $stmt->get_result();
 
-    if ($result->num_rows === 1) {
-        $row = $result->fetch_assoc();
-        $hash = $row['password'];
+  if ($result->num_rows === 1) {
+    $row = $result->fetch_assoc();
+    $hash = $row['password'];
 
-        if (password_verify($password, $hash)) {
-            $success = "✅ Password is VALID for $email";
-        } else {
-            $error = "❌ Password is INVALID for $email";
-        }
+    if (password_verify($password, $hash)) {
+      $success = "✅ Password is VALID for $email";
     } else {
-        $error = "❌ No patient found with that email.";
+      $error = "❌ Password is INVALID for $email";
     }
+  } else {
+    $error = "❌ No patient found with that email.";
+  }
 
-    $stmt->close();
+  $stmt->close();
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Check Patient Password</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style/style.css" title="style" />
+  <link rel="stylesheet" type="text/css" href="style/responsive.css" media="screen and (max-width: 768px)">
 </head>
+
 <body>
   <div id="main">
     <div id="header">
@@ -52,10 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
       </div>
       <div id="menubar">
+        <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
         <ul id="menu">
           <li><a href="home.php">Home</a></li>
-          <li><a href="login.php">Login</a></li>
+          <li class="selected"><a href="list_appointments.php">Appointments</a></li>
+          <li><a href="make_appointment.php">Book</a></li>
           <li><a href="privacy.php">Privacy</a></li>
+          <li><a href="logout.php">Logout</a></li>
         </ul>
       </div>
     </div>
@@ -86,7 +92,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" class="form_settings">
           <p><span>Email:</span><input type="email" name="email" required></p>
           <p><span>Password:</span><input type="password" name="password" required></p>
-          <p style="padding-top: 15px"><input class="submit" type="submit" value="Check Password"></p>
+          <p style="padding-top: 15px">
+            <button type="submit" class="submit">Check Password</button>
+          </p>
+
         </form>
       </div>
     </div>
@@ -98,7 +107,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <a href="http://www.html5webtemplates.co.uk">Free CSS Templates</a>
     </div>
   </div>
+  <script src="style/script.js"></script>
 </body>
+
 </html>
 
 <?php mysqli_close($conn); ?>

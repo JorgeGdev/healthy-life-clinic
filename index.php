@@ -101,12 +101,7 @@ $stmt->close();
     </div>
   </div>
   
-  <script>
-  function toggleMenu() {
-    const menu = document.getElementById('menu');
-    menu.classList.toggle('active');
-  }
-</script>
+  <script src="style/script.js"></script>
 </body>
 
 </html>

@@ -2,7 +2,7 @@
 require 'config.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    die("Invalid appointment ID.");
+  die("Invalid appointment ID.");
 }
 $appointment_id = (int) $_GET['id'];
 
@@ -13,56 +13,59 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows == 0) {
-    die("Appointment not found.");
+  die("Appointment not found.");
 }
 
 $appointment = $result->fetch_assoc();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (!isset($_POST['appointment_date']) || empty($_POST['appointment_date']) || strtotime($_POST['appointment_date']) === false) {
-        die("Invalid appointment date.");
-    }
+  if (!isset($_POST['appointment_date']) || empty($_POST['appointment_date']) || strtotime($_POST['appointment_date']) === false) {
+    die("Invalid appointment date.");
+  }
 
-    if (!isset($_POST['appointment_time']) || empty($_POST['appointment_time'])) {
-        die("Invalid appointment time.");
-    }
+  if (!isset($_POST['appointment_time']) || empty($_POST['appointment_time'])) {
+    die("Invalid appointment time.");
+  }
 
-    if (!isset($_POST['reason']) || strlen(trim($_POST['reason'])) < 10) {
-        die("Reason must be at least 10 characters.");
-    }
+  if (!isset($_POST['reason']) || strlen(trim($_POST['reason'])) < 10) {
+    die("Reason must be at least 10 characters.");
+  }
 
-    $valid_statuses = ['Pending', 'Completed', 'Cancelled'];
-    if (!isset($_POST['status']) || !in_array($_POST['status'], $valid_statuses)) {
-        die("Invalid status value.");
-    }
+  $valid_statuses = ['Pending', 'Completed', 'Cancelled'];
+  if (!isset($_POST['status']) || !in_array($_POST['status'], $valid_statuses)) {
+    die("Invalid status value.");
+  }
 
-    $new_date = $_POST['appointment_date'];
-    $new_time = $_POST['appointment_time'];
-    $new_reason = htmlspecialchars(trim($_POST['reason']));
-    $new_status = $_POST['status'];
+  $new_date = $_POST['appointment_date'];
+  $new_time = $_POST['appointment_time'];
+  $new_reason = htmlspecialchars(trim($_POST['reason']));
+  $new_status = $_POST['status'];
 
-    $update_sql = "UPDATE appointments SET appointment_date = ?, appointment_time = ?, reason = ?, status = ? WHERE appointment_id = ?";
-    $update_stmt = $conn->prepare($update_sql);
-    $update_stmt->bind_param("ssssi", $new_date, $new_time, $new_reason, $new_status, $appointment_id);
+  $update_sql = "UPDATE appointments SET appointment_date = ?, appointment_time = ?, reason = ?, status = ? WHERE appointment_id = ?";
+  $update_stmt = $conn->prepare($update_sql);
+  $update_stmt->bind_param("ssssi", $new_date, $new_time, $new_reason, $new_status, $appointment_id);
 
-    if ($update_stmt->execute()) {
-        echo "<script>alert('Appointment updated successfully!'); window.location.href = 'list_appointments.php';</script>";
-    } else {
-        echo "Error updating appointment: " . $conn->error;
-    }
+  if ($update_stmt->execute()) {
+    echo "<script>alert('Appointment updated successfully!'); window.location.href = 'list_appointments.php';</script>";
+  } else {
+    echo "Error updating appointment: " . $conn->error;
+  }
 
-    $update_stmt->close();
+  $update_stmt->close();
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Edit Appointment - Healthy Life Clinic</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style/style.css" title="style" />
+  <link rel="stylesheet" type="text/css" href="style/responsive.css" media="screen and (max-width: 768px)">
 </head>
+
 <body>
   <div id="main">
     <div id="header">
@@ -73,8 +76,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
       </div>
       <div id="menubar">
+        <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
         <ul id="menu">
-          <li><a href="index.php">Home</a></li>
+          <li><a href="home.php">Home</a></li>
           <li class="selected"><a href="list_appointments.php">Appointments</a></li>
           <li><a href="make_appointment.php">Book</a></li>
           <li><a href="privacy.php">Privacy</a></li>
@@ -115,9 +119,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </select>
           </p>
 
-          <p style="padding-top: 15px">
-            <input class="submit" type="submit" value="Update Now">
+          <p class="form-submit">
+            <button type="submit" class="submit">Update Now</button>
           </p>
+
+
         </form>
       </div>
     </div>
@@ -129,7 +135,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       <a href="http://www.html5webtemplates.co.uk">Free CSS Templates</a>
     </div>
   </div>
+  <script src="style/script.js"></script>
 </body>
+
 </html>
 
-<?php $stmt->close(); $conn->close(); ?>
+<?php $stmt->close();
+$conn->close(); ?>

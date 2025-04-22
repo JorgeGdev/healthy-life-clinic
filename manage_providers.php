@@ -3,8 +3,8 @@ require 'config.php';
 require 'checksession.php';
 
 if (!isAdmin()) {
-    header('Location: login.php');
-    exit();
+  header('Location: login.php');
+  exit();
 }
 
 // Notificaciones
@@ -13,50 +13,50 @@ $error = '';
 
 // Crear o actualizar
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $first_name = trim($_POST['first_name']);
-    $last_name = trim($_POST['last_name']);
-    $specialization = trim($_POST['specialization']);
+  $first_name = trim($_POST['first_name']);
+  $last_name = trim($_POST['last_name']);
+  $specialization = trim($_POST['specialization']);
 
-    if ($first_name && $last_name && $specialization) {
-        if (!empty($_POST['id'])) {
-            // Update
-            $id = intval($_POST['id']);
-            $sql = "UPDATE providers SET first_name=?, last_name=?, specialization=? WHERE provider_id=?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssi", $first_name, $last_name, $specialization, $id);
-        } else {
-            // Insert
-            $sql = "INSERT INTO providers (first_name, last_name, specialization) VALUES (?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sss", $first_name, $last_name, $specialization);
-        }
-
-        if ($stmt->execute()) {
-            $success = "Provider saved successfully.";
-        } else {
-            $error = "Error saving provider: " . $conn->error;
-        }
-
-        $stmt->close();
+  if ($first_name && $last_name && $specialization) {
+    if (!empty($_POST['id'])) {
+      // Update
+      $id = intval($_POST['id']);
+      $sql = "UPDATE providers SET first_name=?, last_name=?, specialization=? WHERE provider_id=?";
+      $stmt = $conn->prepare($sql);
+      $stmt->bind_param("sssi", $first_name, $last_name, $specialization, $id);
     } else {
-        $error = "Please fill out all fields.";
+      // Insert
+      $sql = "INSERT INTO providers (first_name, last_name, specialization) VALUES (?, ?, ?)";
+      $stmt = $conn->prepare($sql);
+      $stmt->bind_param("sss", $first_name, $last_name, $specialization);
     }
+
+    if ($stmt->execute()) {
+      $success = "Provider saved successfully.";
+    } else {
+      $error = "Error saving provider: " . $conn->error;
+    }
+
+    $stmt->close();
+  } else {
+    $error = "Please fill out all fields.";
+  }
 }
 
 // Eliminar
 if (isset($_POST['delete']) && is_numeric($_POST['delete'])) {
-    $id = intval($_POST['delete']);
-    $sql = "DELETE FROM providers WHERE provider_id=?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
+  $id = intval($_POST['delete']);
+  $sql = "DELETE FROM providers WHERE provider_id=?";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("i", $id);
 
-    if ($stmt->execute()) {
-        $success = "Provider deleted.";
-    } else {
-        $error = "Error deleting provider: " . $conn->error;
-    }
+  if ($stmt->execute()) {
+    $success = "Provider deleted.";
+  } else {
+    $error = "Error deleting provider: " . $conn->error;
+  }
 
-    $stmt->close();
+  $stmt->close();
 }
 
 // Obtener lista
@@ -65,12 +65,15 @@ $providers = $conn->query("SELECT * FROM providers ORDER BY last_name ASC");
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Manage Providers - Healthy Life Clinic</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style/style.css" />
+  <link rel="stylesheet" type="text/css" href="style/responsive.css" media="screen and (max-width: 768px)">
 </head>
+
 <body>
   <div id="main">
     <div id="header">
@@ -81,7 +84,8 @@ $providers = $conn->query("SELECT * FROM providers ORDER BY last_name ASC");
         </div>
       </div>
       <div id="menubar">
-      <ul id="menu">
+        <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
+        <ul id="menu">
           <li class="selected"><a href="admin_dashboard.php">Dashboard</a></li>
           <li><a href="manage_patients.php">Manage Patients</a></li>
           <li><a href="manage_providers.php">Manage Providers</a></li>
@@ -117,32 +121,53 @@ $providers = $conn->query("SELECT * FROM providers ORDER BY last_name ASC");
           <p><span>First Name:</span><input type="text" name="first_name" id="first_name" required /></p>
           <p><span>Last Name:</span><input type="text" name="last_name" id="last_name" required /></p>
           <p><span>Specialization:</span><input type="text" name="specialization" id="specialization" required /></p>
-          <p style="padding-top: 15px"><input class="submit" type="submit" value="Save Provider" /></p>
+          <p style="padding-top: 15px">
+            <button type="submit" class="submit">Save Provider</button>
+          </p>
+
         </form>
 
         <h2>Existing Providers</h2>
-        <table>
-          <tr>
-            <th>ID</th>
-            <th>Full Name</th>
-            <th>Specialization</th>
-            <th>Actions</th>
-          </tr>
-          <?php while ($row = $providers->fetch_assoc()): ?>
-          <tr>
-            <td><?php echo $row['provider_id']; ?></td>
-            <td><?php echo htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></td>
-            <td><?php echo htmlspecialchars($row['specialization']); ?></td>
-            <td>
-              <button onclick="editProvider('<?php echo $row['provider_id']; ?>', '<?php echo $row['first_name']; ?>', '<?php echo $row['last_name']; ?>', '<?php echo $row['specialization']; ?>')">Edit</button>
-              <form method="post" action="manage_providers.php" style="display:inline;" onsubmit="return confirm('Delete this provider?');">
-                <input type="hidden" name="delete" value="<?php echo $row['provider_id']; ?>">
-                <button type="submit">Delete</button>
-              </form>
-            </td>
-          </tr>
-          <?php endwhile; ?>
-        </table>
+
+
+        <input type="text"
+          id="search_specialization"
+          onkeyup="searchSpecialization()"
+          placeholder="Search by specialization..."
+          style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;">
+
+        <h2>Search Providers</h2>
+        <input type="text" id="providerSearchInput" placeholder="Search by name..." onkeyup="filterProviders()" style="width: 100%; padding: 8px; margin-bottom: 15px;">
+
+
+        <div id="provider_results">
+          <table>
+            <tr>
+              <th>ID</th>
+              <th>Full Name</th>
+              <th>Specialization</th>
+              <th>Actions</th>
+            </tr>
+            <?php while ($row = $providers->fetch_assoc()): ?>
+              <tr>
+                <td><?php echo $row['provider_id']; ?></td>
+                <td><?php echo htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></td>
+                <td><?php echo htmlspecialchars($row['specialization']); ?></td>
+                <td>
+                  <button class="btn-green" onclick="editProvider('<?php echo $row['provider_id']; ?>', '<?php echo $row['first_name']; ?>', '<?php echo $row['last_name']; ?>', '<?php echo $row['specialization']; ?>')">
+                    Edit
+                  </button>
+                  <form method="post" action="manage_providers.php" style="display:inline;" onsubmit="return confirm('Delete this provider?');">
+                    <input type="hidden" name="delete" value="<?php echo $row['provider_id']; ?>">
+                    <button type="submit" class="btn-green">Delete</button>
+                  </form>
+                </td>
+
+              </tr>
+            <?php endwhile; ?>
+          </table>
+        </div>
+
       </div>
     </div>
 
@@ -151,7 +176,7 @@ $providers = $conn->query("SELECT * FROM providers ORDER BY last_name ASC");
       <a href="privacy.php">Privacy</a>
     </div>
   </div>
-
+  <script src="style/script.js"></script>
   <script>
     function editProvider(id, first, last, spec) {
       document.getElementById('provider_id').value = id;
@@ -161,6 +186,7 @@ $providers = $conn->query("SELECT * FROM providers ORDER BY last_name ASC");
     }
   </script>
 </body>
+
 </html>
 
 <?php $conn->close(); ?>

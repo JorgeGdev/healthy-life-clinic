@@ -2,7 +2,7 @@
 require 'config.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    die("Invalid appointment ID.");
+  die("Invalid appointment ID.");
 }
 $appointment_id = (int) $_GET['id'];
 
@@ -20,7 +20,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows == 0) {
-    die("Appointment not found.");
+  die("Appointment not found.");
 }
 
 $appointment = $result->fetch_assoc();
@@ -28,12 +28,15 @@ $appointment = $result->fetch_assoc();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Appointment Details - Healthy Life Clinic</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style/style.css" title="style" />
+  <link rel="stylesheet" type="text/css" href="style/responsive.css" media="screen and (max-width: 768px)">
 </head>
+
 <body>
   <div id="main">
     <div id="header">
@@ -44,8 +47,9 @@ $appointment = $result->fetch_assoc();
         </div>
       </div>
       <div id="menubar">
+        <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
         <ul id="menu">
-          <li><a href="index.php">Home</a></li>
+          <li><a href="home.php">Home</a></li>
           <li class="selected"><a href="list_appointments.php">Appointments</a></li>
           <li><a href="make_appointment.php">Book</a></li>
           <li><a href="privacy.php">Privacy</a></li>
@@ -74,8 +78,9 @@ $appointment = $result->fetch_assoc();
         <p><strong>Reason:</strong> <?php echo htmlspecialchars($appointment['reason']); ?></p>
 
         <form action="list_appointments.php" method="get" style="padding-top: 15px;">
-          <input class="submit" type="submit" value="Back to Appointment List">
+          <button type="submit" class="submit">Back to Appointment List</button>
         </form>
+
       </div>
     </div>
 
@@ -86,7 +91,10 @@ $appointment = $result->fetch_assoc();
       <a href="http://www.html5webtemplates.co.uk">Free CSS Templates</a>
     </div>
   </div>
+  <script src="style/script.js"></script>
 </body>
+
 </html>
 
-<?php $stmt->close(); $conn->close(); ?>
+<?php $stmt->close();
+$conn->close(); ?>

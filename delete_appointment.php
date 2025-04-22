@@ -2,35 +2,38 @@
 require 'config.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    die("Invalid appointment ID.");
+  die("Invalid appointment ID.");
 }
 $appointment_id = (int) $_GET['id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $delete_sql = "DELETE FROM appointments WHERE appointment_id = ?";
-    $stmt = $conn->prepare($delete_sql);
-    $stmt->bind_param("i", $appointment_id);
+  $delete_sql = "DELETE FROM appointments WHERE appointment_id = ?";
+  $stmt = $conn->prepare($delete_sql);
+  $stmt->bind_param("i", $appointment_id);
 
-    if ($stmt->execute()) {
-        echo "<script>alert('Appointment deleted successfully!'); window.location.href = 'list_appointments.php';</script>";
-    } else {
-        echo "Error deleting appointment: " . $conn->error;
-    }
+  if ($stmt->execute()) {
+    echo "<script>alert('Appointment deleted successfully!'); window.location.href = 'list_appointments.php';</script>";
+  } else {
+    echo "Error deleting appointment: " . $conn->error;
+  }
 
-    $stmt->close();
-    $conn->close();
-    exit();
+  $stmt->close();
+  $conn->close();
+  exit();
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Delete Appointment - Healthy Life Clinic</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style/style.css" title="style" />
+  <link rel="stylesheet" type="text/css" href="style/responsive.css" media="screen and (max-width: 768px)">
 </head>
+
 <body>
   <div id="main">
     <div id="header">
@@ -41,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
       </div>
       <div id="menubar">
+        <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
         <ul id="menu">
           <li><a href="home.php">Home</a></li>
           <li class="selected"><a href="list_appointments.php">Appointments</a></li>
@@ -49,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <li><a href="logout.php">Logout</a></li>
         </ul>
       </div>
+
     </div>
 
     <div id="site_content">
@@ -64,10 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1>Delete Appointment</h1>
         <p>Are you sure you want to delete this appointment?</p>
 
-        <form action="" method="POST" style="padding-top: 15px;">
-          <input class="submit" type="submit" value="Yes, Delete">
-          <a href="list_appointments.php" class="submit" style="margin-left: 10px; background: #777;">Cancel</a>
+        <form action="" method="POST" class="form-actions">
+          <button type="submit" class="submit">Yes, Delete</button>
+          <a href="list_appointments.php" class="cancel-btn">Cancel</a>
         </form>
+
+
       </div>
     </div>
 
@@ -78,5 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <a href="http://www.html5webtemplates.co.uk">Free CSS Templates</a>
     </div>
   </div>
+  <script src="style/script.js"></script>
 </body>
+
 </html>

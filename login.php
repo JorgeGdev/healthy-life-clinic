@@ -1,7 +1,7 @@
 <?php
 // Start session
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 
 // Include DB connection
@@ -12,56 +12,59 @@ $error = '';
 
 // Procesar formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = mysqli_real_escape_string($conn, trim($_POST['email']));
-    $password = trim($_POST['password']);
-    $user_type = $_POST['user_type'];
+  $email = mysqli_real_escape_string($conn, trim($_POST['email']));
+  $password = trim($_POST['password']);
+  $user_type = $_POST['user_type'];
 
-    // Selección de tabla
-    $query = ($user_type == 'admin') 
-        ? "SELECT admin_id AS id, password FROM admins WHERE email = ?" 
-        : "SELECT patient_id AS id, password FROM patients WHERE email = ?";
+  // Selección de tabla
+  $query = ($user_type == 'admin')
+    ? "SELECT admin_id AS id, password FROM admins WHERE email = ?"
+    : "SELECT patient_id AS id, password FROM patients WHERE email = ?";
 
-    // Verificación
-    if ($stmt = $conn->prepare($query)) {
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+  // Verificación
+  if ($stmt = $conn->prepare($query)) {
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-        if ($result->num_rows === 1) {
-            $user = $result->fetch_assoc();
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_type'] = $user_type;
+    if ($result->num_rows === 1) {
+      $user = $result->fetch_assoc();
+      if (password_verify($password, $user['password'])) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_type'] = $user_type;
 
-                // Redirección según el tipo de usuario
-                if ($user_type === 'admin') {
-                    header('Location: admin_dashboard.php');
-                } else {
-                    header('Location: index.php');
-                }
-                exit();
-            } else {
-                $error = "Invalid email or password.";
-            }
+        // Redirección según el tipo de usuario
+        if ($user_type === 'admin') {
+          header('Location: admin_dashboard.php');
         } else {
-            $error = "No user found with that email.";
+          header('Location: index.php');
         }
-
-        $stmt->close();
+        exit();
+      } else {
+        $error = "Invalid email or password.";
+      }
     } else {
-        $error = "Database error. Please try again later.";
+      $error = "No user found with that email.";
     }
+
+    $stmt->close();
+  } else {
+    $error = "Database error. Please try again later.";
+  }
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Login - Healthy Life Clinic</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style/style.css" title="style" />
+  <link rel="stylesheet" type="text/css" href="style/responsive.css" media="screen and (max-width: 768px)">
 </head>
+
 <body>
   <div id="main">
     <div id="header">
@@ -72,9 +75,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
       </div>
       <div id="menubar">
+        <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
         <ul id="menu">
           <li><a href="home.php">Home</a></li>
-          <li><a href="privacy.php">Privacy Policy</a></li>
+          <li class="selected"><a href="list_appointments.php">Appointments</a></li>
+          <li><a href="make_appointment.php">Book</a></li>
+          <li><a href="privacy.php">Privacy</a></li>
+          <li><a href="logout.php">Logout</a></li>
         </ul>
       </div>
     </div>
@@ -106,7 +113,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <option value="admin">Admin</option>
             </select>
           </p>
-          <p style="padding-top: 15px"><input class="submit" type="submit" value="Login"></p>
+          <p class="form-submit">
+            <button type="submit" class="submit">Login</button>
+        </p>
+
         </form>
       </div>
     </div>
@@ -118,7 +128,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <a href="http://www.html5webtemplates.co.uk">Free CSS Templates</a>
     </div>
   </div>
+  <script src="style/script.js"></script>
 </body>
+
 </html>
 
 <?php mysqli_close($conn); ?>

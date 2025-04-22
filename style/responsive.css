@@ -93,3 +93,15 @@ input.submit, button {
     background-color: rgba(255,255,255,0.1);
   }
 }
+
+.form_settings p:last-of-type {
+  text-align: left;
+}
+
+.form_settings .submit {
+  width: 100%;
+  max-width: 300px;
+}
+
+
+

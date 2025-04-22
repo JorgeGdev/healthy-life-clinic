@@ -8,6 +8,7 @@
   <meta name="keywords" content="Privacy Policy, Data Protection, Health Information, New Zealand, GDPR, HIPAA">
   <meta name="author" content="Healthy Life Clinic">
   <link rel="stylesheet" type="text/css" href="style/style.css" title="style" />
+  <link rel="stylesheet" type="text/css" href="style/responsive.css" media="screen and (max-width: 768px)">
 </head>
 
 <body>
@@ -20,11 +21,12 @@
         </div>
       </div>
       <div id="menubar">
+        <div class="menu-toggle" onclick="toggleMenu()">☰ Menu</div>
         <ul id="menu">
           <li><a href="home.php">Home</a></li>
-          <li><a href="list_appointments.php">Appointments</a></li>
+          <li class="selected"><a href="list_appointments.php">Appointments</a></li>
           <li><a href="make_appointment.php">Book</a></li>
-          <li class="selected"><a href="privacy.php">Privacy</a></li>
+          <li><a href="privacy.php">Privacy</a></li>
           <li><a href="logout.php">Logout</a></li>
         </ul>
       </div>
@@ -96,5 +98,6 @@
       <a href="http://www.html5webtemplates.co.uk">Free CSS Templates</a>
     </div>
   </div>
+  <script src="style/script.js"></script>
 </body>
 </html>
